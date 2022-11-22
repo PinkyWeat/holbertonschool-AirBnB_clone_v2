@@ -119,7 +119,6 @@ class HBNBCommand(cmd.Cmd):
         className = args.split()[0] #  split class from params.
         params = args.split()[1:] # split params from class.
 
-        print(className)
         #  first filter
         if not className:
             print("** class name missing **")
@@ -129,7 +128,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         #  create instance before so in each loop you setattrs
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = HBNBCommand.classes[className]()
 
         # loop through params + split name from value
         for parameter in params:
