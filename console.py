@@ -139,7 +139,7 @@ class HBNBCommand(cmd.Cmd):
                 paramValue = paramValue.replace("\"", '')
                 if "_" in paramValue:  #  check for underscores
                     paramValue = paramValue.replace("_", " ")
-            if "." in paramValue:  #  check if it's a float
+            elif "." in paramValue:  #  check if it's a float
                 paramValue = float(paramValue)
             else:  #  if it's none of the cases above, then it's an int (hopefully hehe)
                 paramValue = int(paramValue)
