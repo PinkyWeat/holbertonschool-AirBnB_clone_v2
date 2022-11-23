@@ -14,11 +14,10 @@ class FileStorage:
             return FileStorage.__objects
         else:
             flt = []
-            for obj in FileStorageObjects:
-                  if obj.__class__.__name__ == cls:
-                       flt.append(obj)
+            for obj in FileStorage.__objects:
+                if obj.__class__.__name__ == cls:
+                    flt.append(obj)
             return flt
-                       
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -44,10 +43,10 @@ class FileStorage:
         from models.review import Review
 
         classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
+            'BaseModel': BaseModel, 'User': User, 'Place': Place,
+            'State': State, 'City': City, 'Amenity': Amenity,
+            'Review': Review
+        }
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
