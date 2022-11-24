@@ -13,10 +13,10 @@ class FileStorage:
         if cls is None:
             return FileStorage.__objects
         else:
-            flt = []
+            flt = {}
             for obj in FileStorage.__objects:
                 if obj.__class__.__name__ == cls:
-                    flt.append(obj)
+                    flt[obj.key()] = obj.value()
             return flt
 
     def new(self, obj):
