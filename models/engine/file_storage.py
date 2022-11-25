@@ -58,5 +58,8 @@ class FileStorage:
     def delete(self, obj=None):
         """Deletes an object based on user input"""
         if obj is not None:
-            if obj.key in FileStorage.__objects.keys():
-                del FileStorage.__objects[obj.key]
+            for k, v in self.__objects.items():
+                if obj == v:
+                    break
+            self.__objects.pop(k)
+        return
