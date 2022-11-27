@@ -10,61 +10,59 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-USER = os.environ.get('HBNB_MYSQL_USER')
-PSWD = os.environ.get('HBNB_MYSQL_PWD')
-HOST = os.environ.get('HBNB_MYSQL_HOST')
-DTBS = os.environ.get('HBNB_MYSQL_DB')
-ENV = os.environ.get('HBNB_ENV')
 
 
 class DBStorage():
-    """ Class method """
+    """ Database storage engine module """
     __engine = None
     __session = None
 
-    classes = {
+    classes_list = {
         'User': User, 'Place': Place,
-        'State': State, 'City': City, 'Amenity': Amenity,
-        'Review': Review
+        'State': State, 'City': City,
+        'Amenity': Amenity, 'Review': Review
     }
 
     def __init__(self):
-        """ Creating the engine and the session """
+        """ init function/constructor """
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
-            USER, PSWD, HOST, DTBS), pool_pre_ping=True)
-        if ENV == 'test':
+            os.getenv('HBNB_MYSQL_USER'),
+            os.getenv('HBNB_MYSQL_PWD'),
+            os.getenv('HBNB_MYSQL_HOST'),
+            os.getenv('HBNB_MYSQL_DB')), pool_pre_ping=True)
+        if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """ Query the current DB and return all objects """
+        """ Return all objects """
         values = dict()
         if cls is None:
-            for c in DBStorage.classes.values():
-                for obj in self.__session.query(c).all():
+            for clss in DBStorage.classes_list.values():
+                for obj in self.__session.query(clss).all():
                     values[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
-            for obj in self.__session.query(DBStorage.classes[cls]).all():
-                values[obj.__class__.__name__ + '.' + obj.id] = obj
+            for objct in self.__session.query(DBStorage.classes_list[cls]).all():
+                values[objct.__class__.__name__ + '.' + objct.id] = objct
         return values
 
     def reload(self):
-        """ Create all tables in th current DB and the current session """
+        """ Create all tables in current DB session """
         Base.metadata.create_all(self.__engine)
         session = sessionmaker(self.__engine, expire_on_commit=False)
         Session = scoped_session(session)
         self.__session = Session()
 
     def new(self, obj):
-        """ Adding an object to the current DB """
+        """ Adds an object """
         self.__session.add(obj)
         self.__session.commit()
 
     def save(self):
-        """ Committing all changes of the current DB """
+        """ Saves changes """
         self.__session.commit()
 
     def delete(self, obj=None):
-        """ Deletes an instance from the current DB """
+        """ Deletes an object """
         if obj is not None:
             self.__session.delete(obj)
             self.save()
