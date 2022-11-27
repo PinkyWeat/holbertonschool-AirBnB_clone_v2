@@ -1,14 +1,16 @@
 #!/usr/bin/python3
 """Database storage engine module"""
-from os import getenv
 from models.user import User
 from models.base_model import BaseModel
 from models.base_model import Base
+import json
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+import sqlalchemy
+from os import getenv
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 
@@ -19,45 +21,53 @@ classes = {"User": User,
          "Review": Review,
          "Place": Place}
 
+
 class DBStorage():
-    """Database storage engine"""
+    """Database"""
     __engine = None
     __session = None
 
     def __init__(self):
-        """Init function//constructor"""
+        """inisialization"""
         self.__engine = create_engine(('mysql+mysqldb://{}:{}@{}/{}')
-                        .format(getenv('HBNB_MYSQL_USER'), getenv('HBNB_MYSQL_PWD'),
-                        getenv('HBNB_MYSQL_HOST'), getenv('HBNB_MYSQL_DB')),
-                        pool_pre_ping=True)
+                                      .format(getenv('HBNB_MYSQL_USER'),
+                                              getenv('HBNB_MYSQL_PWD'),
+                                              getenv('HBNB_MYSQL_HOST'),
+                                              getenv('HBNB_MYSQL_DB')),
+                                      pool_pre_ping=True)
         if getenv('HBNB_ENV') == "test":
             Base.meta.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
-        """Returns a dictionary with all values"""
-        dc = {}
-        if cls in classes.values() or cls is None:
-            for key in self.__session.query(classes[cls.__class__.__name__]).all():
-                dc[type(key).__name__+'.'+key.id] = key
-        return dc
+        """all func"""
+        objs = {}
+        for cclass in model:
+            if model[cclass] == cls or cls is None:
+                for key in self.__session.query(model[cclass]).all():
+                    objs[type(key).__name__+'.'+key.id] = key
+        return objs
 
     def new(self, obj):
-        """Add an object to the current database instance"""
+        """new"""
         self.__session.add(obj)
 
     def save(self):
-        """Commit all changes to the current database instance"""
+        """save"""
         self.__session.commit()
 
     def delete(self, obj=None):
-        """Deletes the stated object if obj is not None"""
+        """delete"""
         if obj is not None:
             self.__session.delete(obj)
             self.save()
 
     def reload(self):
-        """Create all tables and creates the current database session"""
+        """reload"""
         Base.metadata.create_all(self.__engine)
-        scop_session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(scop_session)
+        ssession = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(ssession)
         self.__session = Session
+
+    def close(self):
+        """close"""
+        self.__session.remove()
