@@ -14,14 +14,14 @@ class State(BaseModel, Base):
     if getenv("HBNB_TYPE_STORAGE") == "db":
         cities = relationship("City", backref="state", cascade="all, delete-orphan")
 
-    elif getenv("HBNB_TYPE_STORAGE") == "file":
+    else:
 
         @property
         def cities(self):
             """ Return all cities from the current state instance """
             from models import storage
             lst = []
-            for k, v in storage.all(City):
-                if self.id == v.state.id:
-                    lst.append(v)
+            for val in storage.all(City).values():
+                if self.id == val.state_id:
+                    lst.append(val)
             return lst
