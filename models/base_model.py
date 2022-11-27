@@ -8,9 +8,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 Base = declarative_base()
 
 class BaseModel:
-    id = Column(Integer, primary_key=True, nullable=False)
-    created_at = Column(datetime, default=datetime.utcnow(), nullable=False)
-    updated_at = Column(datetime, default=datetime.utcnow(), nullable=False)
 
     """A base class for all hbnb models"""
     def __init__(self, *args, **kwargs):
