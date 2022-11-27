@@ -4,7 +4,6 @@ import os
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
-from models.place import place_amenity
 
 
 class Amenity(BaseModel):
@@ -12,6 +11,6 @@ class Amenity(BaseModel):
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = 'amenities'
         name = Column(String(128), nullable=False)
-        place_amenities = relationship("Place", secondary="place_amenity", viewonly=True)
+        place_amenities = relationship("Place", secondary="place_amenity")
     else:
         name = ""
