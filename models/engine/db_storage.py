@@ -61,4 +61,3 @@ class DBStorage():
         scop_session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         session = scoped_session(scop_session)
         self.__session = session
-
