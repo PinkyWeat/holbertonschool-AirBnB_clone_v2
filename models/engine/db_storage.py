@@ -41,8 +41,8 @@ class DBStorage():
                 for obj in self.__session.query(clss).all():
                     values[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
-            for objct in self.__session.query(DBStorage.classes_list[cls]).all():
-                values[objct.__class__.__name__ + '.' + objct.id] = objct
+            for o in self.__session.query(DBStorage.classes_list[cls]).all():
+                values[o.__class__.__name__ + '.' + o.id] = o
         return values
 
     def reload(self):
