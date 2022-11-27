@@ -14,15 +14,19 @@ from os import getenv
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 
-classes = {"User": User, "State": State,
-         "City": City, "Amenity": Amenity,
-         "Place": Place, "Review": Review}
-
 
 class DBStorage():
     """Database"""
     __engine = None
     __session = None
+    classes = {
+        "User": User,
+        "State": State,
+        "City": City,
+        "Amenity": Amenity,
+        "Place": Place,
+        "Review": Review
+        }
 
     def __init__(self):
         """inisialization"""
@@ -39,8 +43,8 @@ class DBStorage():
         """all func"""
         values = dict()
         if cls is None:
-            for c in DBStorage.classes.values():
-                for obj in self.__session.query(c).all():
+            for clss in DBStorage.classes.values():
+                for obj in self.__session.query(clss).all():
                     values[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
             for obj in self.__session.query(DBStorage.classes[cls]).all():
