@@ -3,6 +3,7 @@
 import cmd
 import sys
 import shlex
+import string
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -129,6 +130,11 @@ class HBNBCommand(cmd.Cmd):
             value = arg.split('=')[1]
             if value != value.strip('"'):
                 value = value.replace('_', ' ').strip('"')
+            else:
+                if '.' in value:
+                    value = float(value)
+                elif value.isnumeric():
+                    value = int(value)
             setattr(new_obj, key, value)
         new_obj.save()
         print(new_obj.id)
