@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+"""Database storage engine module"""
 from os import getenv
 from models.user import User
 from models.base_model import BaseModel
