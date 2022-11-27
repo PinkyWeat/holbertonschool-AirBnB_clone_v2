@@ -41,9 +41,9 @@ class DBStorage():
     def all(self, cls=None):
         """all func"""
         objs = {}
-        for cclass in model:
-            if model[cclass] == cls or cls is None:
-                for key in self.__session.query(model[cclass]).all():
+        for cclass in classes:
+            if classes[cclass] == cls or cls is None:
+                for key in self.__session.query(classes[cclass]).all():
                     objs[type(key).__name__+'.'+key.id] = key
         return objs
 
