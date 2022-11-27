@@ -131,7 +131,7 @@ class HBNBCommand(cmd.Cmd):
             if value != value.strip('"'):
                 value = value.replace('_', ' ').strip('"')
             else:
-                if '.' in value:
+                if '.' in value and value.strip('.').isnumeric():
                     value = float(value)
                 elif value.isnumeric():
                     value = int(value)
