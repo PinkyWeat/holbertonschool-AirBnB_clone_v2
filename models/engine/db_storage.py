@@ -14,12 +14,9 @@ from os import getenv
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 
-classes = {"User": User,
-         "City": City,
-         "Amenity": Amenity,
-         "State": State,
-         "Review": Review,
-         "Place": Place}
+model = {"User": User, "State": State,
+         "City": City, "Amenity": Amenity,
+         "Place": Place, "Review": Review}
 
 
 class DBStorage():
@@ -30,20 +27,20 @@ class DBStorage():
     def __init__(self):
         """inisialization"""
         self.__engine = create_engine(('mysql+mysqldb://{}:{}@{}/{}')
-                                      .format(getenv('HBNB_MYSQL_USER'),
-                                              getenv('HBNB_MYSQL_PWD'),
-                                              getenv('HBNB_MYSQL_HOST'),
-                                              getenv('HBNB_MYSQL_DB')),
-                                      pool_pre_ping=True)
+                                        .format(getenv('HBNB_MYSQL_USER'),
+                                                getenv('HBNB_MYSQL_PWD'),
+                                                getenv('HBNB_MYSQL_HOST'),
+                                                getenv('HBNB_MYSQL_DB')),
+                                        pool_pre_ping=True)
         if getenv('HBNB_ENV') == "test":
             Base.meta.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
         """all func"""
         objs = {}
-        for cclass in classes:
-            if classes[cclass] == cls or cls is None:
-                for key in self.__session.query(classes[cclass]).all():
+        for cclass in model:
+            if model[cclass] == cls or cls is None:
+                for key in self.__session.query(model[cclass]).all():
                     objs[type(key).__name__+'.'+key.id] = key
         return objs
 
@@ -57,7 +54,7 @@ class DBStorage():
 
     def delete(self, obj=None):
         """delete"""
-        if obj is not None:
+        if obj == None:
             self.__session.delete(obj)
             self.save()
 
@@ -70,4 +67,4 @@ class DBStorage():
 
     def close(self):
         """close"""
-        self.__session.remove()
+        self.__session.close()
