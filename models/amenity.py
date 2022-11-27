@@ -6,7 +6,7 @@ from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
 
 
-class Amenity(BaseModel):
+class Amenity(BaseModel, Base):
     """ Amenity class for HBNB project """
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = 'amenities'
