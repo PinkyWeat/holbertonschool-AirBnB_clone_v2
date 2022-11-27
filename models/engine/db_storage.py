@@ -14,7 +14,7 @@ from os import getenv
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 
-model = {"User": User, "State": State,
+classes = {"User": User, "State": State,
          "City": City, "Amenity": Amenity,
          "Place": Place, "Review": Review}
 
@@ -33,20 +33,24 @@ class DBStorage():
                                                 getenv('HBNB_MYSQL_DB')),
                                         pool_pre_ping=True)
         if getenv('HBNB_ENV') == "test":
-            Base.meta.drop_all(bind=self.__engine)
+            Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
         """all func"""
-        objs = {}
-        for cclass in model:
-            if model[cclass] == cls or cls is None:
-                for key in self.__session.query(model[cclass]).all():
-                    objs[type(key).__name__+'.'+key.id] = key
-        return objs
+        values = dict()
+        if cls is None:
+            for c in DBStorage.classes.values():
+                for obj in self.__session.query(c).all():
+                    values[obj.__class__.__name__ + '.' + obj.id] = obj
+        else:
+            for obj in self.__session.query(DBStorage.classes[cls]).all():
+                values[obj.__class__.__name__ + '.' + obj.id] = obj
+        return values
 
     def new(self, obj):
         """new"""
         self.__session.add(obj)
+        self.__session.commit()
 
     def save(self):
         """save"""
@@ -61,9 +65,9 @@ class DBStorage():
     def reload(self):
         """reload"""
         Base.metadata.create_all(self.__engine)
-        ssession = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(ssession)
-        self.__session = Session
+        session = sessionmaker(self.__engine, expire_on_commit=False)
+        Session = scoped_session(session)
+        self.__session = Session()
 
     def close(self):
         """close"""
