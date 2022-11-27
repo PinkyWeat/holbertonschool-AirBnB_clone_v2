@@ -117,28 +117,40 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+
+        #  first filter
         if not args:
             print("** class name missing **")
             return
         if args.split()[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        cl_name = shlex.split(args)[0]
-        new_obj = HBNBCommand.classes[cl_name]()
-        for argument in shlex.split(args)[1:]:
-            key = argument.split('=')[0]
-            value = argument.split('=')[1]
-            if value != value.strip('"'):
-                value = value.replace('_', ' ').strip('"')
-            else:
-                if '.' in value and value.strip('.').isnumeric():
-                    value = float(value)
-                elif value.isnumeric():
-                    value = int(value)
-            setattr(new_obj, key, value)
-        new_obj.save()
-        print(new_obj.id)
+        
+        # split EVERYTHING + new instance
+        params = args.split()
+        new_instance = HBNBCommand.classes[params[0]]()
 
+        for parameter in params[1:]:  #  everything post className
+
+            parameters = parameter.split("=")
+
+            if len(parameters) > 1:
+
+                attrName = parameters[0]
+                attrValue = parameters[1]
+                #  checks attr type
+                if '"' in attrValue[0]: 
+                    attrValue = attrValue[1:-1].replace('_', ' ')
+                elif '.' in attrValue:
+                    attrValue = float(attrValue)
+                else:
+                    attrValue = int(attrValue)
+
+                setattr(new_instance, attrName, attrValue)
+
+        storage.save()
+        print(new_instance.id)
+        
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
