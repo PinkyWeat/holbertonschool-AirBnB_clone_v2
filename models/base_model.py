@@ -8,7 +8,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 Base = declarative_base()
 
 class BaseModel:
-
     """A base class for all hbnb models"""
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
