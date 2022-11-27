@@ -8,7 +8,7 @@ from models.city import City
 
 class State(BaseModel, Base):
     """ State class """
-    name = Column(String(128), nullable=False)
+    name = "" """Column(String(128), nullable=False)
     __tablename__ = "states"
 
     if getenv("HBNB_TYPE_STORAGE") == "db":
@@ -18,10 +18,9 @@ class State(BaseModel, Base):
 
         @property
         def cities(self):
-            """ Return all cities from the current state instance """
             from models import storage
             lst = []
             for val in storage.all(City).values():
                 if self.id == val.state_id:
                     lst.append(val)
-            return lst
+            return lst """
