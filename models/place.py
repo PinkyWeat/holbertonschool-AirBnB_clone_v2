@@ -13,8 +13,8 @@ place_amenity = Table('place_amenity', Base.metadata,
 
 class Place(BaseModel, Base):
     """ A place to stay """
+    __tablename__ = 'places'
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        __tablename__ = 'places'
         reviews = relationship("Review", backref="place", cascade="all, delete, delete-orphan")
         amenities = relationship("Amenity", secondary="place_amenity", backref="places", viewonly=False)
         city_id = Column(String(60), ForeignKey('cities.id'))
