@@ -8,11 +8,13 @@ from models.city import City
 
 class State(BaseModel, Base):
     """ State class """
-    __tablename__ = "states"
-    name = Column(String(128), nullable=False)
     if getenv("HBNB_TYPE_STORAGE") == "db":
+        __tablename__ = "states"
+        name = Column(String(128), nullable=False)
         cities = relationship("City", backref="state", cascade="all, delete-orphan")
     else:
+        name = ""
+
         @property
         def cities(self):
             """ Returns all cities corresponding to the given state """
@@ -22,3 +24,4 @@ class State(BaseModel, Base):
                 if self.id == city.state_id:
                     ret_lst.append(city)
             return ret_lst
+
