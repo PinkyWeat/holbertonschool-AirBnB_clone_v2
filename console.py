@@ -125,9 +125,9 @@ class HBNBCommand(cmd.Cmd):
             return
         cl_name = shlex.split(args)[0]
         new_obj = HBNBCommand.classes[cl_name]()
-        for arg in shlex.split(args)[1:]:
-            key = arg.split('=')[0]
-            value = arg.split('=')[1]
+        for argument in shlex.split(args)[1:]:
+            key = argument.split('=')[0]
+            value = argument.split('=')[1]
             if value != value.strip('"'):
                 value = value.replace('_', ' ').strip('"')
             else:
