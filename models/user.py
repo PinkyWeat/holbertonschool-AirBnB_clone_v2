@@ -7,8 +7,8 @@ from models.base_model import BaseModel, Base
 
 class User(BaseModel, Base):
     """This class defines a user by various attributes"""
+    __tablename__ = 'users'
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        __tablename__ = 'users'
         places = relationship("Place", backref="user", cascade="all, delete, delete-orphan")
         reviews = relationship("Review", backref="user", cascade="all, delete, delete-orphan")
         email = Column(String(128), nullable=False)
