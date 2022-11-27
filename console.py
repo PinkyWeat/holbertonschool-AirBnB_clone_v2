@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import shlex
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -115,38 +116,22 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        #  first filter
         if not args:
             print("** class name missing **")
             return
-        elif args.split()[0] not in HBNBCommand.classes:
+        if args.split()[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-
-        className = args.split()[0] #  split class from params.
-        params = args.split()[1:] # split params from class.
-
-        #  create instance before so in each loop you setattrs
-        new_instance = HBNBCommand.classes[className]()
-
-        # loop through params + split name from value
-        for parameter in params:
-            paramName = parameter.split('=')[0]
-            paramValue = parameter.split('=')[1]
-
-            if "\"" in paramValue:  #  check if it's a string
-                paramValue = paramValue.split("\"")
-                if "_" in paramValue:  #  check for underscores
-                    paramValue = paramValue.replace("_", " ")
-            else:
-                if "." in paramValue:  #  check if it's a float
-                    paramValue = float(paramValue)
-                else:  #  if it's none of the cases above, then it's an int (hopefully hehe)
-                    paramValue = int(paramValue)
-            setattr(new_instance, paramName, paramValue)  #  set attr
-
-        new_instance.save()
-        print(new_instance.id)
+        cl_name = shlex.split(args)[0]
+        new_obj = HBNBCommand.classes[cl_name]()
+        for arg in shlex.split(args)[1:]:
+            key = arg.split('=')[0]
+            value = arg.split('=')[1]
+            if value != value.strip('"'):
+                value = value.replace('_', ' ').strip('"')
+            setattr(new_obj, key, value)
+        new_obj.save()
+        print(new_obj.id)
 
     def help_create(self):
         """ Help information for the create method """
