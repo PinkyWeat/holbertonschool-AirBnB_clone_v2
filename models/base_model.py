@@ -6,11 +6,7 @@ from datetime import datetime
 from sqlalchemy import String, Column, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
-if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-    Base = declarative_base()
-else:
-    class Base:
-        """Dummy base class"""
+Base = declarative_base()
 
 
 class BaseModel:
