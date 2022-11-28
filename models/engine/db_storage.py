@@ -13,56 +13,57 @@ from models.review import Review
 
 
 class DBStorage():
-    """ Database storage engine module """
+    """ Class method """
     __engine = None
     __session = None
 
-    classes_list = {
+    classes = {
         'User': User, 'Place': Place,
-        'State': State, 'City': City,
-        'Amenity': Amenity, 'Review': Review
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
     }
 
     def __init__(self):
-        """ init function/constructor """
+        """ Creating the engine and the session """
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
             os.getenv('HBNB_MYSQL_USER'),
             os.getenv('HBNB_MYSQL_PWD'),
             os.getenv('HBNB_MYSQL_HOST'),
-            os.getenv('HBNB_MYSQL_DB')), pool_pre_ping=True)
+            os.getenv('HBNB_MYSQL_DB')),
+            pool_pre_ping=True)
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """ Return all objects """
+        """ Query the current DB and return all objects """
         values = dict()
         if cls is None:
-            for clss in DBStorage.classes_list.values():
-                for obj in self.__session.query(clss).all():
+            for c in DBStorage.classes.values():
+                for obj in self.__session.query(c).all():
                     values[obj.__class__.__name__ + '.' + obj.id] = obj
         else:
-            for o in self.__session.query(DBStorage.classes_list[cls]).all():
-                values[o.__class__.__name__ + '.' + o.id] = o
+            for obj in self.__session.query(DBStorage.classes[cls]).all():
+                values[obj.__class__.__name__ + '.' + obj.id] = obj
         return values
 
     def reload(self):
-        """ Create all tables in current DB session """
+        """ Create all tables in th current DB and the current session """
         Base.metadata.create_all(self.__engine)
         session = sessionmaker(self.__engine, expire_on_commit=False)
         Session = scoped_session(session)
         self.__session = Session()
 
     def new(self, obj):
-        """ Adds an object """
+        """ Adding an object to the current DB """
         self.__session.add(obj)
         self.__session.commit()
 
     def save(self):
-        """ Saves changes """
+        """ Committing all changes of the current DB """
         self.__session.commit()
 
     def delete(self, obj=None):
-        """ Deletes an object """
+        """ Deletes an instance from the current DB """
         if obj is not None:
             self.__session.delete(obj)
             self.save()
