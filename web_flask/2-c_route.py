@@ -17,12 +17,9 @@ def hbnb():
     return "HBNB"
 
 
-@app.route('/c/<text>')
-def c(text):
-    text = str(text)
-    if '_' in text:
-        text = text.replace('_')
-    return "C " + text
+@app.route('/c/<text>', strict_slashes=False)
+def c(text=None):
+    return "C " + str(text).replace("_", " ")
 
 
 # check that's the route + run the app
