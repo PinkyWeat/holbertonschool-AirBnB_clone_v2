@@ -30,7 +30,7 @@ def py(text="is cool"):
 
 @app.route('/number/<int:n>', strict_slashes=False)
 def is_num(n):
-    return " is a number".format(n)
+    return "{} is a number".format(n)
 
 
 # check that's the route + run the app
