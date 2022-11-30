@@ -34,9 +34,9 @@ def is_num(n):
     return "{} is a number".format(n)
 
 
-@app.route('/number_template/<int:n>')
-def temp_is_num(n):
-    return render_template('5-number.html', variable=n)
+@app.route("/number_template/<int:n>")
+def number_template_route(n):
+    return render_template("5-number.html", variable=n)
 
 
 # check that's the route + run the app
