@@ -5,35 +5,36 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 # create Flask obj referencing self
+app.url_map.strict_slashes = False
 
 
-@app.route('/', strict_slashes=False)
+@app.route('/')
 def index():
     return "Hello HBNB!"
 
 
-@app.route('/hbnb', strict_slashes=False)
+@app.route('/hbnb')
 def hbnb():
     return "HBNB"
 
 
-@app.route('/c/<text>', strict_slashes=False)
+@app.route('/c/<text>')
 def c(text=None):
     return "C " + str(text).replace("_", " ")
 
 
-@app.route('/python/<text>', strict_slashes=False)
-@app.route('/python', strict_slashes=False)
+@app.route('/python/<text>')
+@app.route('/python')
 def py(text="is cool"):
     return "Python " + str(text).replace("_", " ")
 
 
-@app.route('/number/<int:n>', strict_slashes=False)
+@app.route('/number/<int:n>')
 def is_num(n):
     return "{} is a number".format(n)
 
 
-@app.route('/number_template/<int:n>', strict_slashes=False)
+@app.route('/number_template/<int:n>')
 def temp_is_num(n):
     return render_template('5-number.html', variable=n)
 
