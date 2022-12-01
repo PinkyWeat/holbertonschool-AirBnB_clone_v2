@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Python Package 1"""
+"""Python Module"""
 from flask import Flask, render_template
 
 
