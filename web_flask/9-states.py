@@ -15,10 +15,11 @@ def tear_down(exit):
     storage.close()
 
 
-@app.route('/states_list')
-def list_states():
-    #  renders + shows states
-    return render_template('7-states_list.html', states=storage.all('State'))
+@app.route('/states', strict_slashes=False)
+def states_list():
+    # lists states
+    states = storage.all("State")
+    return render_template('8-cities_by_states.html', states=states, id=None)
 
 @app.route('/states/<id>', strict_slashes=False)
 def state_id(id):
